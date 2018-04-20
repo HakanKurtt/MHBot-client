@@ -1,6 +1,6 @@
 var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
-    password = 'MHBOT';
+    password = 'TKBmdUw8ktj9k6tWufy4';
 
 module.exports.encrypt = function(text){
     var cipher = crypto.createCipher(algorithm,password)
@@ -10,8 +10,10 @@ module.exports.encrypt = function(text){
 };
 
 module.exports.decrypt = function(text){
+    console.log("DATAAA="+text);
     var decipher = crypto.createDecipher(algorithm,password)
     var dec = decipher.update(text,'hex','utf8')
     dec += decipher.final('utf8');
+    console.log("dec="+dec);
     return dec;
 };
