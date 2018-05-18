@@ -1,6 +1,6 @@
 var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
-    password = 'TKBmdUw8ktj9k6tWufy4';
+    password = 'MHBOT';
 
 module.exports.encrypt = function(text){
     var cipher = crypto.createCipher(algorithm,password)
