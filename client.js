@@ -6,7 +6,7 @@ var crypto = require('./utils/crypto');
 
 
 //reconnect parametresi bağlantı koptuğunda tekrardan sunucuya bağlanması için
-var socket = io.connect('http://192.168.1.106:8080', {reconnect: true});
+var socket = io.connect('http://192.168.1.106:4000', {reconnect: true});
 
 var receiver_id;
 var sender_id;
