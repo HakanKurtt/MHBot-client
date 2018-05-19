@@ -8,22 +8,6 @@ var crypto = require('./utils/crypto');
 //reconnect parametresi bağlantı koptuğunda tekrardan sunucuya bağlanması için
 var socket = io.connect('http://192.168.1.109:4000', {reconnect: true});
 
-var ip = require('ip');
- 
-//Botun bulunduğu ağ adresini değişkene atama
-var networkAddr = ip.mask(ip.address(), "255.255.255.0")+"-255";
-
-console.log(networkAddr);
-
-//Botun bulunduğu ip adresini script tarafından kullanılması için bulunduğu dizine kaydet.
-fs.writeFile("./ipaddress.txt", networkAddr, function(err) {
-    if(err) {
-        return console.log(err);
-    }
-
-    console.log("The file was saved!");
-}); 
-
 var receiver_id;
 var sender_id;
 var thisSocket;
