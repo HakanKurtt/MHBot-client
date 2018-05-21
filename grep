@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>$
+<!DOCTYPE nmaprun>$
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>$
+<!-- Nmap 7.01 scan initiated Mon May 21 06:02:00 2018 as: nmap -O -iL ipaddress.txt -oX output -p 22 -->$
+<nmaprun scanner="nmap" args="nmap -O -iL ipaddress.txt -oX output -p 22" start="1526907720" startstr="Mon May 21 06:02:00 2018" version="7.01" xmloutputversion="1.04">$
+<scaninfo type="syn" protocol="tcp" numservices="1" services="22"/>$
+<verbose level="0"/>$
+<debugging level="0"/>$
+<host starttime="1526907720" endtime="1526907726"><status state="up" reason="arp-response" reason_ttl="0"/>$
+<address addr="192.168.43.1" addrtype="ipv4"/>$
+<address addr="8C:3A:E3:60:E4:96" addrtype="mac" vendor="LG Electronics"/>$
+<hostnames>$
+</hostnames>$
+<ports><port protocol="tcp" portid="22"><state state="closed" reason="reset" reason_ttl="64"/><service name="ssh" method="table" conf="3"/></port>$
+</ports>$
+<os><portused state="closed" proto="tcp" portid="22"/>$
+<portused state="closed" proto="udp" portid="37130"/>$
+</os>$
+<distance value="1"/>$
+<times srtt="4257" rttvar="4920" to="100000"/>$
+</host>$
+<host starttime="1526907720" endtime="1526907726"><status state="up" reason="arp-response" reason_ttl="0"/>$
+<address addr="192.168.43.89" addrtype="ipv4"/>$
+<address addr="54:27:1E:27:3E:67" addrtype="mac" vendor="AzureWave Technology"/>$
+<hostnames>$
+<hostname name="DESKTOP-D4HGDRL" type="PTR"/>$
+</hostnames>$
+<ports><port protocol="tcp" portid="22"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="ssh" method="table" conf="3"/></port>$
+</ports>$
+<os></os>$
+<distance value="1"/>$
+<times srtt="139" rttvar="2155" to="100000"/>$
+</host>$
+<host starttime="1526907720" endtime="1526907724"><status state="up" reason="arp-response" reason_ttl="0"/>$
+<address addr="192.168.43.148" addrtype="ipv4"/>$
+<address addr="B8:27:EB:E2:1D:AE" addrtype="mac" vendor="Raspberry Pi Foundation"/>$
+<hostnames>$
+<hostname name="elk-server" type="PTR"/>$
+</hostnames>$
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="ssh" method="table" conf="3"/></port>$
+</ports>$
+<os><portused state="open" proto="tcp" portid="22"/>$
+<portused state="closed" proto="udp" portid="44400"/>$
+<osmatch name="Linux 3.2 - 4.0" accuracy="100" line="58530">$
+<osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="3.X" accuracy="100"><cpe>cpe:/o:linux:linux_kernel:3</cpe></osclass>$
+<osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="4.X" accuracy="100"><cpe>cpe:/o:linux:linux_kernel:4</cpe></osclass>$
+</osmatch>$
+</os>$
+<uptime seconds="19587" lastboot="Mon May 21 00:35:39 2018"/>$
+<distance value="1"/>$
+<tcpsequence index="261" difficulty="Good luck!" values="8E9E1D23,395F5589,8C00244B,940DB1E3,CCFC715C,CD0E12F4"/>$
+<ipidsequence class="All zeros" values="0,0,0,0,0,0"/>$
+<tcptssequence class="100HZ" values="1DE1D6,1DE1E0,1DE1EA,1DE1F4,1DE1FE,1DE208"/>$
+<times srtt="8298" rttvar="4863" to="100000"/>$
+</host>$
+<host starttime="1526907726" endtime="1526907728"><status state="up" reason="localhost-response" reason_ttl="0"/>$
+<address addr="192.168.43.201" addrtype="ipv4"/>$
+<hostnames>$
+<hostname name="ubuntu" type="PTR"/>$
+</hostnames>$
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="64"/><service name="ssh" method="table" conf="3"/></port>$
+</ports>$
+<os><portused state="open" proto="tcp" portid="22"/>$
+<portused state="closed" proto="udp" portid="30588"/>$
+<osmatch name="Linux 3.12 - 3.19" accuracy="100" line="57420">$
+<osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="3.X" accuracy="100"><cpe>cpe:/o:linux:linux_kernel:3</cpe></osclass>$
+</osmatch>$
+<osmatch name="Linux 3.8 - 3.19" accuracy="100" line="59486">$
+<osclass type="general purpose" vendor="Linux" osfamily="Linux" osgen="3.X" accuracy="100"><cpe>cpe:/o:linux:linux_kernel:3</cpe></osclass>$
+</osmatch>$
+</os>$
+<uptime seconds="21577" lastboot="Mon May 21 00:02:31 2018"/>$
+<distance value="0"/>$
+<tcpsequence index="264" difficulty="Good luck!" values="E7642630,FEA41B2B,8D7E868A,16B39FD0,55FC9DFA,5604AD1D"/>$
+<ipidsequence class="All zeros" values="0,0,0,0,0,0"/>$
+<tcptssequence class="other" values="51F941,51F95A,51F973,51F98C,51F9A5,51F9BE"/>$
+<times srtt="39" rttvar="3751" to="100000"/>$
+</host>$
+<runstats><finished time="1526907728" timestr="Mon May 21 06:02:08 2018" elapsed="9.04" summary="Nmap done at Mon May 21 06:02:08 2018; 256 IP addresses (4 hosts up) scanned in 9.04 seconds" exit="success"/><hosts up="4" down="252" total="256"/>$
+</runstats>$
+</nmaprun>$
