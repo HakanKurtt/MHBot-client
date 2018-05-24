@@ -17,14 +17,14 @@ if [ $4 -eq 0 ]; then
   fi
 elif [ $4 -eq 1 ]; then
   if [ $isNodeInstalledPi -eq 0 ]; then
-  sshpass -p $1 ssh -tt -o StrictHostKeyChecking=no $2@$3 "wget https://nodejs.org/dist/v8.11.2/node-v8.11.2-linux-armv7l.tar.xz;sudo tar -xvf node-v8.11.2-linux-armv7l.tar.xz;cd node-v8.11.2-linux-armv7l/;sudo cp -R * /usr/local;sudo rm -rf node-v8.11.2-linux-armv7l/"
+  sshpass -p $1 ssh -tt -o StrictHostKeyChecking=no $2@$3 "wget https://nodejs.org/dist/v8.11.2/node-v8.11.2-linux-armv7l.tar.xz;sudo tar -xvf node-v8.11.2-linux-armv7l.tar.xz;cd node-v8.11.2-linux-armv7l/;sudo cp -R * /usr/local;sudo rm -rf node-v8.11.2-linux-armv7l"
   fi
 fi
 
 
 
 if [ $isGitInstalled -eq 0 ]; then
-  sshpass -p $1 ssh -tt -o StrictHostKeyChecking=no $2@$3 "sudo apt-get install git"
+  sshpass -p $1 ssh -tt -o StrictHostKeyChecking=no $2@$3 "sudo apt-get install -y git"
 fi
 } #End of the Function
 
